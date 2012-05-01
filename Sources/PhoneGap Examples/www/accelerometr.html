@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+        <meta charset="utf-8">
+            
+            
+        <link rel="stylesheet" href="jquery.mobile-1.1.0.min.css" />   
+        <script type="text/javascript" charset="utf-8" src="cordova-1.6.0.js"></script>
+        <script type="text/javascript" src="jquery-1.6.4.min.js"></script>
+        <script type="text/javascript" src="jquery.mobile-1.1.0.min.js"></script>
+    </head>
+    
+    <body>
+            <div data-role = "header" data-position="inline">
+                
+                <a href="index.html" data-icon="arrow-l">Back</a>
+                Accelerometr
+            </div>
+            <div data-role="content">
+                <p><b>getCurrentAcceleration</b></p>
+                <p>Get the current acceleration along the x, y, and z axis.</p>
+                <a href = "#" onclick="getCurrentAcceleration();" data-role="button" data-mini="true">Get Current Acceleration</a>
+                
+                <script type = "text/javascript" charset="utf-8">
+                    function getCurrentAcceleration()
+                    {
+                        navigator.accelerometer.getCurrentAcceleration(onGetCurrentAccelerationSuccess, onGetCurrentAccelerationFail);
+                    }
+                    
+                    //on success of calling to accelerator we will see coordinates
+                    function onGetCurrentAccelerationSuccess( acceleration )
+                    {
+                        alert('Acceleration X: ' + acceleration.x + '\n' +
+                              'Acceleration Y: ' + acceleration.y + '\n' +
+                              'Acceleration Z: ' + acceleration.z + '\n' +
+                              'Timestamp: '      + acceleration.timestamp + '\n');
+                    }
+                    
+                    //in case error happened we need to do something
+                    function onGetCurrentAccelerationFail()
+                    {
+                        alert("Error during method getCurrentAcceleration");
+                    }
+                </script>
+            </div>    
+            
+            <hr/>
+            
+            <div data-role="content">
+                <p><b>watchAcceleration</b></p>
+                <p>At a regular interval, get the acceleration along the x, y, and z axis.</p>
+                
+                <p><b>cleanWatch</b></p>
+                <p>Stop watching the Acceleration referenced by the watch ID parameter.</p>
+                
+                
+                <div data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <a href = "#" onclick="watchAcceleration();" data-role="button">Start Watch</a>
+                    <a href = "#" onclick="stopWatch();" data-role="button">Stop Watch</a>
+                </div>
+                
+                <script type = "text/javascript" charset="utf-8">
+                    var watcher = null;
+                    
+                    //let's start watching coordinates!
+                    function watchAcceleration()
+                    {
+                        //lets check our acceleration every 2 seconds.    
+                        var options = {frequency:2000};
+                        watcher = navigator.accelerometer.watchAcceleration(onWatchAccelerationSuccess, onWatchAccelerationFail, options);
+                    }
+                    
+                    //on success of calling to accelerator we will see coordinates
+                    function onWatchAccelerationSuccess( acceleration )
+                    {
+                        alert('Acceleration X: ' + acceleration.x + '\n' +
+                              'Acceleration Y: ' + acceleration.y + '\n' +
+                              'Acceleration Z: ' + acceleration.z + '\n' +
+                              'Timestamp: '      + acceleration.timestamp + '\n');
+                    }
+                    
+                    //in case error happened we need to do something
+                    function onWatchAccelerationFail()
+                    {
+                        alert("Error during method getCurrentAcceleration");
+                    }
+                    
+                    //stop watcher
+                    function stopWatch()
+                    {
+                        if (watcher)
+                        {
+                            navigator.accelerometer.clearWatch(watcher);   
+                            watcher = null;
+                        }
+                    }
+                    </script>
+            </div> 
+        </body>
+    
+    
+   </html>
