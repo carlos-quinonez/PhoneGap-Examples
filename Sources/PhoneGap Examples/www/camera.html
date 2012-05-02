@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+        <meta charset="utf-8">
+            
+            
+            <link rel="stylesheet" href="jquery.mobile-1.1.0.min.css" />   
+            <script type="text/javascript" charset="utf-8" src="cordova-1.6.0.js"></script>
+            <script type="text/javascript" src="jquery-1.6.4.min.js"></script>
+            <script type="text/javascript" src="jquery.mobile-1.1.0.min.js"></script>
+            </head>
+    
+    <body>
+        <script type = "text/javascript" charset="utf-8">
+            var pictureSource;   // picture source
+            var destinationType; // sets the format of returned value 
+            
+            // Wait for Cordova to connect with the device
+            //
+            document.addEventListener("deviceready",onDeviceReady,false);
+            
+            // Cordova is ready to be used!
+            //
+            function onDeviceReady() {
+                pictureSource=navigator.camera.PictureSourceType;
+                destinationType=navigator.camera.DestinationType;
+            }
+            
+            //if we've captured photo succesfully
+            function onPhotoSuccess(imageData)
+            {
+                // Get image handle
+                var smallImage = document.getElementById('cameraSmallImage');
+                
+                // Unhide image elements
+                smallImage.style.display = 'block';
+                
+                // Show the captured photo
+                // holy mother of God - image received as string:)
+                smallImage.src = "data:image/jpeg;base64," + imageData;
+            }
+            
+            //photo taken and URI sent to JavaScript
+            function onPhotoURISuccess( photoURI )
+            {
+                // Get image handle
+                var largeImage = document.getElementById('cameraLargeImage');
+                
+                // Unhide image elements
+                largeImage.style.display = 'block';
+                
+                // Show the captured photo
+                // The inline CSS rules are used to resize the image
+                largeImage.src = imageURI;
+            }
+            
+            // Something bad happened! We need something to do!
+            function onFail(message) {
+                alert('Failed because: ' + message);
+            }
+            
+            
+            //capture photo and return image as base-64 string
+            function capturePhoto() {
+                // Take picture using device camera and retrieve image as base64-encoded string
+                navigator.camera.getPicture(onPhotoSuccess, onFail, { quality: 50,
+                                            destinationType: destinationType.DATA_URL });
+            }
+            
+            // A button will call this function
+            //
+            function capturePhotoEdit() {
+                // Take picture using device camera, allow edit, and retrieve image as base64-encoded string  
+                navigator.camera.getPicture(onPhotoSuccess, onFail, { quality: 20, allowEdit: true,
+                                            destinationType: destinationType.DATA_URL });
+            }
+            
+            // A button will call this function
+            function getPhoto(source) {
+                // Retrieve image file location from specified source
+                navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50, 
+                                            destinationType: destinationType.FILE_URI,
+                                            sourceType: source });
+            }
+            </script>
+        
+        <div data-role = "header" data-position="inline">
+            
+            <a href="index.html" data-icon="arrow-l">Back</a>
+            Camera
+        </div>
+        <div data-role="content">
+            <p><b>getPicture</b></p>
+            <p>Takes a photo using the camera or retrieves a photo from the device's album. The image is returned as a base64 encoded String or as the URI of an image file.</p>
+            <a href = "#" onclick="capturePhoto();" data-role="button" data-mini="true">Capture photo</a>
+            <a href = "#" onclick="capturePhotoEdit();" data-role="button" data-mini="true">Capture photo Edit</a>
+            <a href = "#" onclick="getPhoto(pictureSource.PHOTOLIBRARY);" data-role="button" data-mini="true">From Photo library</a>
+            <a href = "#" onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);" data-role="button" data-mini="true">From Photo Album</a>
+            <img class="cameraSmallImage" id="cameraSmallImage" />
+            <img class="cameraBigImage" id="cameraBigImage" />
+        </div>    
+    </body>
+    
+    
+</html>
